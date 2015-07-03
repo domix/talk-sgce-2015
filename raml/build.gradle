@@ -1,0 +1,45 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'be.filipblondeel.gradle:gradle-gulp-plugin:0.1'
+  }
+}
+
+apply plugin: 'gulp'
+
+node {
+  // Version of node to use.
+  version = '0.10.36'
+
+  // Enabled the automatic download.
+  download = true
+}
+
+gulp_build.dependsOn 'npmInstall'
+defaultTasks 'build'
+
+def srcDirs = [new File(projectDir, "src/"), new File(projectDir, "package.json")]
+def targetDirs = [new File(rootProject.projectDir, "commons/src/generated"),
+                  new File(rootProject.projectDir, "api/src/generated"),
+                  new File(rootProject.projectDir, "client/src/generated") ]
+gulp_build.inputs.dir srcDirs
+
+
+gulp_build.outputs.dir targetDirs
+
+clean{
+  delete targetDirs
+}
+
+
+jar {
+  from(fileTree("src/")) {
+    into "/META-INF/resources/"
+  }
+  outputs.upToDateWhen { false }
+}
+
+jar.dependsOn gulp_build
+build.outputs.upToDateWhen {true}

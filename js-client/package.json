@@ -1,0 +1,8 @@
+{
+  "name": "sample-project-client",
+  "version": "0.1.0-SNAPSHOT",
+  "main": "./v1/apiClientClient.js",
+  "dependencies": {
+    "popsicle": "^0.3.10"
+  } 
+}

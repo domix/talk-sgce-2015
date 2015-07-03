@@ -1,0 +1,55 @@
+sampleprojectweb:
+  image: dockerfile/java:oracle-java8
+  working_dir: /app/web
+  command: java -jar web-0.1.0-SNAPSHOT.jar
+  environment: 
+    SPRING_RABBITMQ_HOST: sampleprojectrabbitmq
+  volumes:
+    - ../web/build/libs/:/app/web/
+  ports:
+    - 3333:3333
+    - 3332:3332
+  links:
+    - sampleprojectrabbitmq
+
+sampleprojectturbine:
+  image: dockerfile/java:oracle-java8
+  working_dir: /app/turbine
+  command: java -jar turbineApp-0.1.0-SNAPSHOT.jar
+  environment:
+    SPRING_RABBITMQ_HOST: sampleprojectrabbitmq
+  volumes:
+    - ../turbineApp/build/libs/:/app/turbine/
+  ports:
+    - 4333:4333
+    - 4332:4332
+  links:
+    - sampleprojectrabbitmq
+
+sampleprojectapp:
+  image: dockerfile/java:oracle-java8
+  working_dir: /app/api
+  command: java -jar api-0.1.0-SNAPSHOT.jar 
+  environment:
+    SPRING_DATASOURCE_URL: jdbc:postgresql://sampleprojectpostgres:5432/rest_api
+    SPRING_RABBITMQ_HOST: sampleprojectrabbitmq
+  volumes:
+    - ../api/build/libs/:/app/api/
+  links:
+    - sampleprojectpostgres
+    - sampleprojectrabbitmq
+  ports:
+    - 9191:9191
+    - 9192:9192
+
+sampleprojectpostgres:
+  build: database
+  ports:
+    - 5432:5432
+
+sampleprojectrabbitmq:
+  image: dockerfile/rabbitmq
+  ports:
+    - 15672:15672
+    - 5672:5672
+

@@ -1,0 +1,45 @@
+#%RAML 0.8
+title: ApiClient
+version: v1
+mediaType: application/json
+
+traits: !include traits.raml
+
+schemas:
+  - errorResponse: !include error.schema.json
+  - ApiExceptionResponse: !include exception.schema.json
+  - simpleOK: !include simpleOK.schema.json
+  - user: !include users/user.schema.json
+  - map: !include map.schema.json
+  - pageMeta: !include pagination/page.schema.json
+  
+  - hero  : !include heroes/hero.schema.json
+  - heroes : !include heroes/heroes.schema.json
+  
+
+resourceTypes: !include resourcesTypes.raml
+
+/hello:
+  displayName: Rest
+  get:
+    responses:
+      200:
+        body:
+          schema: map
+
+/xkcd:
+  displayName: Xkcd
+  get:
+    responses:
+      200:
+        body:
+          schema: map
+
+          
+/heroes:
+  displayName: Heroes
+  type: collection
+
+  /{name}:
+    displayName: Hero
+    type: member
